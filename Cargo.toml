@@ -1,0 +1,11 @@
+[workspace]
+
+members = [
+    "tokio-lab",
+    "tonic-lab",
+    "wasmtime-lab",
+    "tokio-modbus-lab",
+    "mqtt-lab",
+    "quic-lab",
+]
+

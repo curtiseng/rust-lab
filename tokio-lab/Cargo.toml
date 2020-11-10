@@ -1,0 +1,23 @@
+[package]
+name = "tokio-lab"
+version = "0.1.0"
+authors = ["zifeng <zifeng.1024@qq.com>"]
+edition = "2018"
+
+
+[[bin]]
+name = "helloworld"
+path = "src/helloredis/main.rs"
+
+[[bin]]
+name = "async-demo"
+path = "src/helloasync/main.rs"
+
+[[bin]]
+name = "spawning"
+path = "src/spawning/main.rs"
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tokio = { version = "0.3", features = ["full"] }
+mini-redis = "0.3"

@@ -1,0 +1,22 @@
+[package]
+name = "tonic-lab"
+version = "0.1.0"
+authors = ["zifeng <zifeng.1024@qq.com>"]
+edition = "2018"
+
+[[bin]]
+name = "grpc-server"
+path = "src/server.rs"
+
+[[bin]]
+name = "grpc-client"
+path = "src/client.rs"
+
+[dependencies]
+tokio = { version = "0.2", features = ["full"] }
+tonic = "0.3"
+prost = "0.6"
+
+[build-dependencies]
+tonic-build = "0.3"
+

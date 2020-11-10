@@ -1,0 +1,18 @@
+[package]
+name = "mqtt-lab"
+version = "0.1.0"
+authors = ["zifeng <zifeng.1024@qq.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "mqtt-broker"
+path = "src/broker/server.rs"
+
+[[bin]]
+name = "mqtt-client"
+path = "src/client/clinet.rs"
+
+[dependencies]
+paho-mqtt = "0.7.1"
