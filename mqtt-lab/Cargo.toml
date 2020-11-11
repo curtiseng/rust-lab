@@ -11,8 +11,9 @@ name = "mqtt-broker"
 path = "src/broker/server.rs"
 
 [[bin]]
-name = "mqtt-client"
-path = "src/client/clinet.rs"
+name = "mqtt-client-rumqttc"
+path = "src/client/client_rumqttc.rs"
 
 [dependencies]
-paho-mqtt = "0.7.1"
+tokio = { version = "0.2", features = ["full"] }
+rumqttc = "0.2.0"
