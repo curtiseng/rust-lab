@@ -6,9 +6,10 @@ use std::time::Duration;
 async fn main() {
     let mut mqttoptions = MqttOptions::new("mqtt-async", "127.0.0.1", 1883);
     mqttoptions.set_keep_alive(5);
+    mqttoptions.set_clean_session(false);
 
     let (client, mut event_loop) = AsyncClient::new(mqttoptions, 10);
-    client.subscribe("world", QoS::AtMostOnce).await.unwrap();
+    client.subscribe("world", QoS::ExactlyOnce).await.unwrap();
 
     task::spawn(async move {
         for i in 0..10 {
