@@ -2097,6 +2097,7 @@ dependencies = [
 name = "tokio-lab"
 version = "0.1.0"
 dependencies = [
+ "bytes 0.6.0",
  "mini-redis",
  "tokio 0.3.2",
 ]
