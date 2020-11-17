@@ -17,3 +17,5 @@ path = "src/client/client_rumqttc.rs"
 [dependencies]
 tokio = { version = "0.2", features = ["full"] }
 rumqttc = "0.2.0"
+log = "0.4.8"
+log4rs = "0.10.0"
