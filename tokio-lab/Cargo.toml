@@ -6,11 +6,11 @@ edition = "2018"
 
 [[bin]]
 name = "helloworld"
-path = "src/helloredis/main.rs"
+path = "src/redis/main.rs"
 
 [[bin]]
 name = "async-demo"
-path = "src/helloasync/main.rs"
+path = "src/async/main.rs"
 
 [[bin]]
 name = "spawning"
@@ -18,7 +18,11 @@ path = "src/spawning/main.rs"
 
 [[bin]]
 name = "shared-state"
-path = "src/sharedstate/shared_state.rs"
+path = "src/sharedstate/main.rs"
+
+[[bin]]
+name = "channel"
+path = "src/channels/main.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
