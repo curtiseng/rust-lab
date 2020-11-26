@@ -24,6 +24,9 @@ path = "src/sharedstate/main.rs"
 name = "channel"
 path = "src/channels/main.rs"
 
+[[bin]]
+name = "async-io"
+path = "src/async-io/main.rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
