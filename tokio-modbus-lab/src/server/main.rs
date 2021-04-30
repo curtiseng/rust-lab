@@ -3,7 +3,6 @@ use std::{thread, time::Duration};
 
 use tokio_modbus::prelude::*;
 use tokio_modbus::server;
-use std::future::Future;
 
 struct ModBusServer;
 
