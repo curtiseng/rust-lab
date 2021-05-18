@@ -7,12 +7,12 @@ use log4rs;
 /// 模拟两个设备
 /// A设备 pub 10条消息, 并订阅
 
-#[tokio::main(max_threads = 3)]
+#[tokio::main(worker_threads = 3)]
 async fn main() {
-    log4rs::init_file("log4rs.yaml", Default::default()).unwrap();
+    log4rs::init_file("mqtt-lab/log4rs.yaml", Default::default()).unwrap();
     // 上报客户端
     let mut client_report_options = MqttOptions::new("mqtt-async", "127.0.0.1", 1883);
-    let will = LastWill::new("topic", QoS::AtMostOnce, "I'm reporter, good bye");
+    let will = LastWill::new("topic", "I'm reporter, good bye",QoS::AtMostOnce, false);
     client_report_options.set_keep_alive(5)
         .set_clean_session(false)
         .set_last_will(will);
@@ -24,13 +24,13 @@ async fn main() {
         for i in 0..10 {
             info!("publish: {}", i.to_string().as_str());
             reporter.publish("topic", QoS::AtMostOnce, false, String::from("{\"hello\" : \"world-\"") + &i.to_string() + "}").await.unwrap();
-            time::delay_for(Duration::from_millis(1000)).await;
+            time::sleep(Duration::from_millis(1000)).await;
         }
     });
 
     loop {
         let notification = event_loop.poll().await.unwrap();
         println!("Received = {:?}", notification);
-        tokio::time::delay_for(Duration::from_secs(1)).await;
+        tokio::time::sleep(Duration::from_secs(1)).await;
     }
 }
