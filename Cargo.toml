@@ -7,5 +7,6 @@ members = [
     "tokio-modbus-lab",
     "mqtt-lab",
     "quic-lab",
+    "nng-lab",
 ]
 
