@@ -8,6 +8,7 @@ members = [
     "mqtt-lab",
     "quic-lab",
     "nng-lab",
-    "type-info"
+    "type-info",
+    "importer"
 ]
 

@@ -15,7 +15,7 @@ fn main() -> Result<()> {
 
     // Compile the wasm binary into an in-memory instance of a `Module`.
     println!("Compiling module...");
-    let module = Module::from_file(store.engine(), "wasmtime-lab/wat/hello.wat")?;
+    let module = Module::from_file(store.engine(), "../../wat/hello.wat")?;
 
     // Here we handle the imports of the module, which in this case is our
     // `HelloCallback` type and its associated implementation of `Callback.
