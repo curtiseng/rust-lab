@@ -4,8 +4,6 @@ extern "C" {
 }
 
 #[no_mangle]
-extern fn addto(x: i32) -> i32 {
-    unsafe {
-        x + random()
-    }
+extern "C" fn addto(x: i32) -> i32 {
+    unsafe { x + random() }
 }

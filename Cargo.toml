@@ -9,6 +9,7 @@ members = [
     "quic-lab",
     "nng-lab",
     "type-info",
-    "importer"
+    "importer",
+    "mio-lab"
 ]
 

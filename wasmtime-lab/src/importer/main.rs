@@ -5,11 +5,8 @@ use anyhow::Result;
 use wasmtime::*;
 
 fn main() -> Result<(), Box<dyn Error>> {
-
     let bytes = {
-        let mut f =
-            File::open(
-                "wasmtime-lab/importer.wasm")?;
+        let mut f = File::open("wasmtime-lab/importer.wasm")?;
 
         let mut bytes = vec![];
         f.read_to_end(&mut bytes)?;
@@ -31,7 +28,8 @@ fn main() -> Result<(), Box<dyn Error>> {
             let mut rng = rand::thread_rng();
 
             rng.gen_range(0..=100)
-        }) {
+        },
+    ) {
         return Err("Failed to link closure".into());
     }
 

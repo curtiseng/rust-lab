@@ -13,5 +13,5 @@ pub enum Command {
         key: String,
         val: Vec<u8>,
         resp: Responder<()>,
-    }
+    },
 }

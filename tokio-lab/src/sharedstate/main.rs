@@ -1,11 +1,11 @@
+use bytes::Bytes;
+use mini_redis::Command::{self, Get, Set};
+use mini_redis::{Connection, Frame};
+use std::collections::HashMap;
+use std::option::Option::Some;
+use std::sync::{Arc, Mutex};
 use tokio::net::TcpListener;
 use tokio::net::TcpStream;
-use mini_redis::{Connection, Frame};
-use mini_redis::Command::{self, Get, Set};
-use std::option::Option::Some;
-use bytes::Bytes;
-use std::collections::HashMap;
-use std::sync::{Arc, Mutex};
 
 type Db = Arc<Mutex<HashMap<String, Bytes>>>;
 
@@ -17,16 +17,13 @@ async fn main() {
 
     let db = Arc::new(Mutex::new(HashMap::new()));
 
-
     loop {
         let (socket, _) = listener.accept().await.unwrap();
         let db = db.clone();
         println!("Accepted");
-        tokio::spawn(
-            async move {
-                process(socket, db).await;
-            }
-        );
+        tokio::spawn(async move {
+            process(socket, db).await;
+        });
     }
 }
 
@@ -48,7 +45,7 @@ async fn process(socket: TcpStream, db: Db) {
                     Frame::Null
                 }
             }
-            cmd => panic!("unimplemented {:?}", cmd)
+            cmd => panic!("unimplemented {:?}", cmd),
         };
         connection.write_frame(&response).await.unwrap();
     }

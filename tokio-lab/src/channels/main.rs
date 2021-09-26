@@ -1,8 +1,8 @@
 mod command;
 
-use tokio::sync::mpsc;
-use mini_redis::client;
 use crate::command::Command::*;
+use mini_redis::client;
+use tokio::sync::mpsc;
 use tokio::sync::oneshot;
 
 #[tokio::main]
@@ -37,14 +37,12 @@ async fn main() {
         println!("GOT = {:?}", res)
     });
 
-
     let manager = tokio::spawn(async move {
         // Establish a connection to the server
         let mut client = client::connect("127.0.0.1:6379").await.unwrap();
 
         // Start receiving messages
         while let Some(cmd) = rx.recv().await {
-
             match cmd {
                 Get { key, resp } => {
                     let res = client.get(&key).await;

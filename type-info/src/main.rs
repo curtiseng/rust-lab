@@ -15,8 +15,8 @@ struct Inner {
 
 impl<'de> de::Deserialize<'de> for ConnectorTopics {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: de::Deserializer<'de>,
+    where
+        D: de::Deserializer<'de>,
     {
         struct ConnectorTopicsVisitor;
 
@@ -28,8 +28,8 @@ impl<'de> de::Deserialize<'de> for ConnectorTopics {
             }
 
             fn visit_map<V>(self, mut map: V) -> Result<Self::Value, V::Error>
-                where
-                    V: de::MapAccess<'de>,
+            where
+                V: de::MapAccess<'de>,
             {
                 if let Some(key) = map.next_key()? {
                     let value: Inner = map.next_value()?;
@@ -72,10 +72,10 @@ pub mod from {
         // This deserializer was originally written with u64 in mind. Then it was made generic by
         // changing u64 to T everywhere and adding boundaries. Same with the serializer.
         pub fn deserialize<'de, D, T>(deserializer: D) -> Result<T, D::Error>
-            where
-                D: Deserializer<'de>,
-                T: std::str::FromStr,
-                <T as std::str::FromStr>::Err: std::fmt::Display,
+        where
+            D: Deserializer<'de>,
+            T: std::str::FromStr,
+            <T as std::str::FromStr>::Err: std::fmt::Display,
         {
             String::deserialize(deserializer)?
                 .parse::<T>()
@@ -83,15 +83,14 @@ pub mod from {
         }
 
         pub fn serialize<S, T>(value: &T, serializer: S) -> Result<S::Ok, S::Error>
-            where
-                S: Serializer,
-                T: std::fmt::Display,
+        where
+            S: Serializer,
+            T: std::fmt::Display,
         {
             format!("{}", value).serialize(serializer)
         }
     }
 }
-
 
 fn main() {
     let input = r#"{

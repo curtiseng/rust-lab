@@ -40,5 +40,4 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("The result is '{:?}'", rsp);
 
     Ok(())
-
 }

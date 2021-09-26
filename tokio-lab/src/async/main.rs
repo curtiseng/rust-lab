@@ -1,14 +1,13 @@
-use tokio::runtime;
-use tokio::net::TcpListener;
-use tokio::io::{AsyncReadExt, AsyncWriteExt};
-use std::thread;
 use std::fmt::Debug;
+use std::thread;
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
+use tokio::net::TcpListener;
+use tokio::runtime;
 use tokio::runtime::Runtime;
 
 fn main() {
-
-    let mqtt_rt  = Runtime::new().unwrap();
-    let rpc_rt  = runtime::Builder::new_current_thread().build().unwrap();
+    let mqtt_rt = Runtime::new().unwrap();
+    let rpc_rt = runtime::Builder::new_current_thread().build().unwrap();
     // Spawn the root task
     mqtt_rt.block_on(async {
         let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap();
@@ -41,7 +40,7 @@ fn main() {
     });
     rpc_rt.block_on(async {
         let listener = TcpListener::bind("127.0.0.1:8081").await.unwrap();
-        println!("{}",thread::current().name().unwrap());
+        println!("{}", thread::current().name().unwrap());
         loop {
             let (mut socket, _) = listener.accept().await.unwrap();
             tokio::spawn(async move {
@@ -69,7 +68,6 @@ fn main() {
         }
     });
 }
-
 
 async fn say_world() {
     println!("world")

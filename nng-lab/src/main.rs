@@ -76,4 +76,3 @@ fn subscriber(url: &str) -> Result<(), nng::Error> {
         println!("SUBSCRIBER: THERE ARE {} SUBSCRIBERS", subs);
     }
 }
-
