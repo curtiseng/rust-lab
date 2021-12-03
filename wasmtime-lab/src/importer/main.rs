@@ -6,7 +6,7 @@ use wasmtime::*;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let bytes = {
-        let mut f = File::open("wasmtime-lab/importer.wasm")?;
+        let mut f = File::open("D:\\greenshuttle\\rust-lab\\wasmtime-lab\\importer.wasm")?;
 
         let mut bytes = vec![];
         f.read_to_end(&mut bytes)?;

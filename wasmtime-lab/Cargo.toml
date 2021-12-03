@@ -17,3 +17,4 @@ path = "src/importer/main.rs"
 [dependencies]
 wasmtime = "0.20.0"
 anyhow = "1.0.33"
+rand = "0.8"
