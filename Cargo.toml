@@ -10,6 +10,7 @@ members = [
     "nng-lab",
     "type-info",
     "importer",
-    "mio-lab"
+    "mio-lab",
+    "tokio-codec",
 ]
 
