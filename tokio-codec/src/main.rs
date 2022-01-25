@@ -11,6 +11,8 @@ mod frame;
 
 type BoxError = Box<dyn std::error::Error + Send + Sync>;
 
+/// https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=aca313baa32468cf28af564883941b83
+
 #[tokio::main]
 async fn main() {
     let mut stream = stream::iter(vec![0, 1, 2]);
