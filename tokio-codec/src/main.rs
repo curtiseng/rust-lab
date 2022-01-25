@@ -2,6 +2,7 @@ use std::fmt::{Display, Formatter};
 use std::pin::Pin;
 use std::task::{Context, Poll};
 use futures::{FutureExt, Stream};
+use pin_project_lite::pin_project;
 use tokio_stream::{self as stream, StreamExt};
 use tokio::io::{AsyncRead, AsyncWrite};
 use tokio_util::codec::{Decoder, Framed};
@@ -20,7 +21,7 @@ async fn main() {
 }
 
 pub struct Server<I, S, P> {
-    serves: Vec<Channel<I, S, P>>
+    channels: Vec<Channel<I, S, P>>
 }
 
 pub struct Channel<I, S, P> {
@@ -72,51 +73,64 @@ pub trait Handle<Message> {
     fn process(&mut self, message: Message) -> Self::Stream;
 }
 
-pub struct FramedHandler<'a, T, U> {
-    inner: &'a Framed<T, U>,
+#[derive(Debug, Clone)]
+pub struct FramedHandler<S> {
+    inner: S,
 }
 
-pub fn make_handler<T, U>(inner: T, codec: U) -> FramedHandler<T, U>
-{
-    FramedHandler {
-        inner: &Framed::new(inner, codec),
-    }
-}
-
-// call的是request，handler的是什么, Message还是Channel
-impl<T, U> Handle<Message> for FramedHandler<'_, T, U>
+pub fn make_handler<T, U, S>(inner: T, codec: U) -> FramedHandler<S>
 where
     T: AsyncRead + AsyncWrite,
     U: Decoder,
 {
-    type Item = ();
-    type Error = ();
-    type Stream = FramedHandler<'_,T, U>;
+    FramedHandler {
+        inner: Framed::new(inner, codec),
+    }
+}
 
-    fn poll_ready(&mut self, _cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        Poll::Ready(Result::Ok(()))
+// call的是request，handler的是什么, Message还是Channel
+impl<S, U, E> Handle<Message> for FramedHandler<S>
+where
+    U: Decoder,
+    E: Into<BoxError>,
+    S: Stream<Item = Result<U::Item, E>>,
+{
+    type Item = U::Item;
+    type Error = E;
+    type Stream = S;
+
+    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        self.inner.poll_ready(cx)
     }
 
     fn process(&mut self, message: Message) -> Self::Stream {
         println!("message: {}", message);
-        FramedHandler {
-            // 包装handler无法访问process，获取framed
-            inner: self.inner
+        // 包装handler无法访问process，获取framed
+        FramedStream {
+            inner : self.inner
         }
     }
 }
 
-impl<T, U, E> Stream for FramedHandler<T, U>
-    where
-        T: AsyncRead + AsyncWrite,
-        U: Decoder,
-        E: Into<BoxError>,
+pin_project! {
+    pub struct FramedStream<S> {
+        #[pin]
+        inner: S,
+    }
+}
+
+
+impl<S, U, E> Stream for FramedStream<S>
+where
+    U: Decoder,
+    E: Into<BoxError>,
+    S: Stream<Item = Result<U::Item, E>>,
 {
     type Item = Result<U::Item, E>;
 
-    fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
+    fn poll_next(self: &mut Self, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
         // 包装stream默认同被包装状态相同
-        match self.inner.poll_next(cx) {
+        match self.project().inner.poll_next(cx) {
             Poll::Ready(t) => Poll::Ready(t),
             Poll::Pending => Poll::Pending,
         }
