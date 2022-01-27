@@ -1,3 +1,4 @@
+use std::error::Error;
 use std::fmt::{Display, Formatter};
 use std::pin::Pin;
 use std::task::{Context, Poll};
@@ -21,6 +22,13 @@ async fn main() {
         println!("Got {}", value);
     }
 }
+
+
+
+fn process(message: Message) -> Reslut<Message, BoxError> {
+    Result::Ok(())
+}
+
 
 pub struct Server<I, S, P> {
     channels: Vec<Channel<I, S, P>>
@@ -57,7 +65,7 @@ where
 }
 //       根据proto和transport             包装桥接framed
 //                         framed -> framed_inbound_handler  -> other_inbound_handler  ->
-// incoming <=> channel <=>                                            | error |      async_fn_handler() -> ? 无返回值怎么处理
+// incoming <=> channel <=>                                            | error |         fn_handler(A)-> Option<B> -> Option<None>如何处理
 //                         framed <- framed_outbound_handler <- other_outbound_handler <-
 pub trait Handle<Message> {
 
@@ -67,12 +75,14 @@ pub trait Handle<Message> {
 
     type Stream : Stream<Item = Option<Result<Self::Item, Self::Error>>>;
 
+    type F: FnMut(Message) -> Self::Item;
+
     // 控制处理的速度,是否需要?
     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>>;
 
-    // 获取上一个stream，用来创建下一个stream
+    // 调用上一个stream，用来创建下一个stream
     // 每次连接创建一个channel，每个channel调用一次handle链来创建stream
-    fn process(&mut self, message: Message) -> Self::Stream;
+    fn process(&mut self, f: Self::F) -> Self::Stream;
 }
 
 #[derive(Debug, Clone)]
@@ -105,7 +115,7 @@ where
         self.inner.poll_ready(cx)
     }
 
-    fn process(&mut self, message: Message) -> Self::Stream {
+    fn process(&self, message: Message) -> Self::Stream {
         println!("message: {}", message);
         // 包装handler无法访问process，获取framed
         FramedStream {
@@ -115,9 +125,11 @@ where
 }
 
 pin_project! {
-    pub struct FramedStream<S> {
+    pub struct FramedStream<S, F> {
         #[pin]
         inner: S,
+        #[pin]
+        f: F
     }
 }
 
